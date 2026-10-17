@@ -4,16 +4,27 @@
 
 - Support beginners using the GitHub Copilot app. Explain results in plain Korean and run necessary commands yourself when permitted rather than asking the participant to type them.
 - Read README.md for the participant journey and docs/instructor-guide.md for service contracts, commands, deployment prerequisites, and limitations.
-- Keep tasks small and preserve working login, application persistence, role authorization, and Knowledge search. Prefer changing app/web for UI requests; do not replace real API calls with hardcoded browser data.
+- The participant starts with a minimal screen in app/web, not a completed portal. Implement only the requested stage: first screen, then auth, mentors, applications, Knowledge, and admin UI. Backend contracts already exist; frontend features do not exist until built by the participant.
+- Preserve completed participant work and backend authorization/persistence. Prefer changing app/web for UI requests; do not replace real API calls with hardcoded browser data.
+- The original completed UI is in examples/mentoring-portal. Do not copy it over the participant's UI unless explicitly asked. Consult docs/instructor-guide.md for exact request/response contracts.
 - Do not imply profile editing, session scheduling, or automatic matching already exists. These are extension tasks.
+
+## Canvas-first participant experience
+
+- Prefer the app's browser canvas for the running local preview and editor canvas for README when supported. Reuse the existing preview instance rather than opening duplicate panels.
+- Let participants alternate chat requests with clicking and inspecting their actual app in the browser canvas. Inspect the current canvas when asked about the visible UI; do not assume what is rendered.
+- Do not expose terminals or source files by default when a preview and plain-language explanation suffice. Commands still require the normal permission approvals.
+- If a canvas capability is unavailable, provide the actual local URL or document path. Do not claim to have opened or visually verified a canvas without doing so.
 
 ## Starting and updating locally
 
 - Confirm the current repository/session path and available tools. Use a local execution session for the participant's Docker engine; cloud sessions cannot access their localhost.
 - Check Docker Desktop engine readiness and Docker Compose availability. Installation, login, licenses, and privilege prompts may require the participant.
 - Create .env from .env.example only if missing; never overwrite existing configuration or expose secret values.
-- Start this project's services using `docker compose up --build --detach --wait`. Inspect state before replacing an already running stack.
-- Static web files are copied into the web image. After UI edits, rebuild using `docker compose up --build --detach --wait web`, then tell the participant to refresh their browser.
+- For local development use `docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build --detach --wait`. Inspect state before replacing an already running stack. Use both files for subsequent ps/logs/down operations.
+- app/web is mounted read-only into the preview container. HTML/CSS/JS changes appear automatically after saving (normally 2-3 seconds after edits settle). Do not rebuild for UI edits. Opening a browser preview is preferred; otherwise report the URL. Reload resets unsaved forms and in-memory UI state.
+- For API or preview-server changes rebuild only the affected service with both Compose files. Bare docker-compose.yml is for production-image checks and CI, not the participant's live preview.
+- The optional reference profile serves the original example at port 8081 and shares the demo DB. Start it only when requested, never as the default participant screen.
 - Verify the actual web response and auth, API/DB, and Knowledge health endpoints. Report the correct URL, including any changed host port.
 - For failures, inspect this project's service status and bounded recent logs. Distinguish actual verification from assumptions. Do not claim success for an unexecuted test.
 - Use existing smoke tests. If host Node.js is unavailable, pipe scripts/smoke-test.mjs into the running API container's Node.js as shown in the instructor guide. Explain that the test adds and accepts a demo application.

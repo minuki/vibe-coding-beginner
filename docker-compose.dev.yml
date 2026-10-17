@@ -1,0 +1,41 @@
+services:
+  web:
+    image: mentoring-workshop-preview:local
+    build:
+      context: .
+      dockerfile: scripts/preview.Dockerfile
+    environment:
+      WEB_ROOT: /workspace/app/web
+      API_URL: http://api:3000
+      AUTH_URL: http://auth:3001
+      KNOWLEDGE_URL: http://knowledge:3002
+    volumes:
+      - ./app/web:/workspace/app/web:ro
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  reference:
+    profiles: ["reference"]
+    image: mentoring-workshop-preview:local
+    build:
+      context: .
+      dockerfile: scripts/preview.Dockerfile
+    environment:
+      WEB_ROOT: /workspace/examples/mentoring-portal
+      API_URL: http://api:3000
+      AUTH_URL: http://auth:3001
+      KNOWLEDGE_URL: http://knowledge:3002
+    volumes:
+      - ./examples/mentoring-portal:/workspace/examples/mentoring-portal:ro
+    ports:
+      - "127.0.0.1:8081:80"
+    depends_on:
+      api:
+        condition: service_healthy
+      knowledge:
+        condition: service_healthy
+      auth:
+        condition: service_healthy
