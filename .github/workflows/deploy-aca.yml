@@ -1,0 +1,59 @@
+name: Deploy demo to ACA
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: workshop-demo
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sign in to Azure with GitHub OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      - name: Build and push images to ACR
+        env:
+          ACR_NAME: ${{ vars.ACR_NAME }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          az acr build --registry "$ACR_NAME" --image "mentoring-web:$IMAGE_TAG" --file app/web/Dockerfile .
+          az acr build --registry "$ACR_NAME" --image "mentoring-auth:$IMAGE_TAG" --file mocks/auth/Dockerfile mocks/auth
+          az acr build --registry "$ACR_NAME" --image "mentoring-api:$IMAGE_TAG" --file app/api/Dockerfile app/api
+          az acr build --registry "$ACR_NAME" --image "mentoring-knowledge:$IMAGE_TAG" --file mocks/knowledge/Dockerfile mocks/knowledge
+          az acr build --registry "$ACR_NAME" --image "mentoring-db:$IMAGE_TAG" --file mocks/database/Dockerfile mocks/database
+      - name: Deploy multi-container app
+        env:
+          RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+          IMAGE_TAG: ${{ github.sha }}
+          DATABASE_PASSWORD: ${{ secrets.DEMO_DB_PASSWORD }}
+        run: |
+          az deployment group create \
+            --resource-group "$RESOURCE_GROUP" \
+            --template-file infra/aca/main.bicep \
+            --parameters \
+              environmentId='${{ vars.ACA_ENVIRONMENT_ID }}' \
+              acrLoginServer='${{ vars.ACR_NAME }}.azurecr.io' \
+              pullIdentityId='${{ vars.ACA_PULL_IDENTITY_ID }}' \
+              appName='${{ vars.ACA_NAME }}' \
+              imageTag="$IMAGE_TAG" \
+              databasePassword="$DATABASE_PASSWORD"
+      - name: Show deployed portal URL
+        env:
+          RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+          ACA_NAME: ${{ vars.ACA_NAME }}
+        run: |
+          az containerapp show \
+            --resource-group "$RESOURCE_GROUP" \
+            --name "$ACA_NAME" \
+            --query 'properties.configuration.ingress.fqdn' \
+            --output tsv
