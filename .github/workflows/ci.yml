@@ -17,7 +17,9 @@ jobs:
         with:
           node-version: 22
       - name: Validate Compose configuration
-        run: docker compose config --quiet
+        run: |
+          docker compose config --quiet
+          docker compose -f docker-compose.yml -f docker-compose.dev.yml config --quiet
       - name: Check JavaScript syntax
         run: |
           node --check app/api/server.js
@@ -25,10 +27,17 @@ jobs:
           node --check mocks/knowledge/server.js
           node --check app/web/app.js
           node --check scripts/smoke-test.mjs
+          node --check scripts/dev-server.mjs
+          node --check scripts/live-reload.js
+          node --check examples/mentoring-portal/app.js
+      - name: Test live preview
+        run: node --test scripts/dev-server.test.mjs
       - name: Build and start services
         run: docker compose up --build --detach
       - name: Run integration smoke test
         run: node scripts/smoke-test.mjs
+      - name: Check static production page
+        run: curl --fail http://localhost:8080/
       - name: Show service logs on failure
         if: failure()
         run: docker compose logs

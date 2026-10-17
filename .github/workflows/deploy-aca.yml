@@ -26,11 +26,11 @@ jobs:
           ACR_NAME: ${{ vars.ACR_NAME }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          az acr build --registry "$ACR_NAME" --image "mentoring-web:$IMAGE_TAG" --file app/web/Dockerfile .
-          az acr build --registry "$ACR_NAME" --image "mentoring-auth:$IMAGE_TAG" --file mocks/auth/Dockerfile mocks/auth
-          az acr build --registry "$ACR_NAME" --image "mentoring-api:$IMAGE_TAG" --file app/api/Dockerfile app/api
-          az acr build --registry "$ACR_NAME" --image "mentoring-knowledge:$IMAGE_TAG" --file mocks/knowledge/Dockerfile mocks/knowledge
-          az acr build --registry "$ACR_NAME" --image "mentoring-db:$IMAGE_TAG" --file mocks/database/Dockerfile mocks/database
+          (cd app/web && az acr build --registry "$ACR_NAME" --image "mentoring-web:$IMAGE_TAG" --file Dockerfile .)
+          (cd mocks/auth && az acr build --registry "$ACR_NAME" --image "mentoring-auth:$IMAGE_TAG" --file Dockerfile .)
+          (cd app/api && az acr build --registry "$ACR_NAME" --image "mentoring-api:$IMAGE_TAG" --file Dockerfile .)
+          (cd mocks/knowledge && az acr build --registry "$ACR_NAME" --image "mentoring-knowledge:$IMAGE_TAG" --file Dockerfile .)
+          (cd mocks/database && az acr build --registry "$ACR_NAME" --image "mentoring-db:$IMAGE_TAG" --file Dockerfile .)
       - name: Deploy multi-container app
         env:
           RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
