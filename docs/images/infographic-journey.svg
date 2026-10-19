@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640" role="img" aria-labelledby="t d">
+  <title id="t">내 아이디어가 배포된 앱이 되기까지</title>
+  <desc id="d">설명하기, 확인하기, 연결하기, 제출하기, 배포하기 다섯 단계와 참가자, Copilot, IT팀·강사의 역할 분담을 보여 주는 인포그래픽</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f1edff"/>
+      <stop offset="1" stop-color="#fff1ea"/>
+    </linearGradient>
+    <filter id="sh" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#6b55d9" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  <style>
+    text { font-family: "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", "Segoe UI", sans-serif; }
+    .title { font-size: 34px; font-weight: 800; fill: #1f2340; }
+    .sub { font-size: 17px; fill: #5b607a; }
+    .h { font-size: 22px; font-weight: 800; fill: #1f2340; }
+    .p { font-size: 15px; fill: #4a4f69; }
+    .ex { font-size: 13px; fill: #6b55d9; font-weight: 700; }
+    .num { font-size: 18px; font-weight: 800; fill: #fff; }
+    .icon { font-size: 40px; }
+    .who { font-size: 15px; font-weight: 800; fill: #fff; }
+    .whop { font-size: 14px; fill: #3b3f58; }
+  </style>
+
+  <rect width="1200" height="640" rx="28" fill="url(#bg)"/>
+  <text x="60" y="70" class="title">내 아이디어가 배포된 앱이 되기까지</text>
+  <text x="60" y="104" class="sub">말로 설명하고, 눈으로 확인하고, 하나씩 연결하면 됩니다. 코드는 몰라도 괜찮아요.</text>
+
+  <!-- step 1 -->
+  <g filter="url(#sh)">
+    <rect x="60" y="140" width="200" height="290" rx="20" fill="#fff"/>
+  </g>
+  <circle cx="92" cy="172" r="18" fill="#6b55d9"/><text x="92" y="179" text-anchor="middle" class="num">1</text>
+  <text x="160" y="240" text-anchor="middle" class="icon">💬</text>
+  <text x="160" y="284" text-anchor="middle" class="h">설명하기</text>
+  <text x="160" y="316" text-anchor="middle" class="p">만들고 싶은 화면을</text>
+  <text x="160" y="338" text-anchor="middle" class="p">말로 Copilot에게</text>
+  <text x="160" y="360" text-anchor="middle" class="p">전달해요</text>
+  <text x="160" y="404" text-anchor="middle" class="ex">“첫 화면을 만들어 줘”</text>
+
+  <!-- step 2 -->
+  <g filter="url(#sh)">
+    <rect x="280" y="140" width="200" height="290" rx="20" fill="#fff"/>
+  </g>
+  <circle cx="312" cy="172" r="18" fill="#6b55d9"/><text x="312" y="179" text-anchor="middle" class="num">2</text>
+  <text x="380" y="240" text-anchor="middle" class="icon">👀</text>
+  <text x="380" y="284" text-anchor="middle" class="h">확인하기</text>
+  <text x="380" y="316" text-anchor="middle" class="p">브라우저 캔버스에서</text>
+  <text x="380" y="338" text-anchor="middle" class="p">결과를 보고 직접</text>
+  <text x="380" y="360" text-anchor="middle" class="p">눌러 봐요</text>
+  <text x="380" y="404" text-anchor="middle" class="ex">저장하면 자동 반영</text>
+
+  <!-- step 3 -->
+  <g filter="url(#sh)">
+    <rect x="500" y="140" width="200" height="290" rx="20" fill="#fff"/>
+  </g>
+  <circle cx="532" cy="172" r="18" fill="#6b55d9"/><text x="532" y="179" text-anchor="middle" class="num">3</text>
+  <text x="600" y="240" text-anchor="middle" class="icon">🔌</text>
+  <text x="600" y="284" text-anchor="middle" class="h">연결하기</text>
+  <text x="600" y="316" text-anchor="middle" class="p">로그인·멘토 목록·</text>
+  <text x="600" y="338" text-anchor="middle" class="p">신청 저장·가이드 검색을</text>
+  <text x="600" y="360" text-anchor="middle" class="p">차례로 연결해요</text>
+  <text x="600" y="404" text-anchor="middle" class="ex">한 번에 하나씩</text>
+
+  <!-- step 4 -->
+  <g filter="url(#sh)">
+    <rect x="720" y="140" width="200" height="290" rx="20" fill="#fff"/>
+  </g>
+  <circle cx="752" cy="172" r="18" fill="#6b55d9"/><text x="752" y="179" text-anchor="middle" class="num">4</text>
+  <text x="820" y="240" text-anchor="middle" class="icon">📬</text>
+  <text x="820" y="284" text-anchor="middle" class="h">제출하기</text>
+  <text x="820" y="316" text-anchor="middle" class="p">PR로 변경사항을</text>
+  <text x="820" y="338" text-anchor="middle" class="p">올리면 자동 점검(CI)과</text>
+  <text x="820" y="360" text-anchor="middle" class="p">리뷰가 시작돼요</text>
+  <text x="820" y="404" text-anchor="middle" class="ex">main에 바로 올리지 않기</text>
+
+  <!-- step 5 -->
+  <g filter="url(#sh)">
+    <rect x="940" y="140" width="200" height="290" rx="20" fill="#fff"/>
+  </g>
+  <circle cx="972" cy="172" r="18" fill="#f08a5d"/><text x="972" y="179" text-anchor="middle" class="num">5</text>
+  <text x="1040" y="240" text-anchor="middle" class="icon">🚀</text>
+  <text x="1040" y="284" text-anchor="middle" class="h">배포하기</text>
+  <text x="1040" y="316" text-anchor="middle" class="p">승인 후 병합하면</text>
+  <text x="1040" y="338" text-anchor="middle" class="p">자동으로 배포되고</text>
+  <text x="1040" y="360" text-anchor="middle" class="p">주소가 생겨요</text>
+  <text x="1040" y="404" text-anchor="middle" class="ex" fill="#f08a5d" style="fill:#d9693a">승인만으로는 배포 안 돼요</text>
+
+  <!-- arrows -->
+  <path d="M266 285 l8 8 l-8 8" fill="none" stroke="#b9afee" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M486 285 l8 8 l-8 8" fill="none" stroke="#b9afee" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M706 285 l8 8 l-8 8" fill="none" stroke="#b9afee" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M926 285 l8 8 l-8 8" fill="none" stroke="#b9afee" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- roles -->
+  <text x="60" y="478" class="h" style="font-size:19px">누가 무엇을 하나요?</text>
+
+  <rect x="60" y="494" width="352" height="110" rx="18" fill="#fff"/>
+  <rect x="60" y="494" width="352" height="34" rx="18" fill="#6b55d9"/>
+  <rect x="60" y="510" width="352" height="18" fill="#6b55d9"/>
+  <text x="80" y="517" class="who">🙋 나(참가자)</text>
+  <text x="80" y="557" class="whop">무엇이 필요한지 정하고</text>
+  <text x="80" y="580" class="whop">결과가 맞는지 직접 확인해요</text>
+
+  <rect x="424" y="494" width="352" height="110" rx="18" fill="#fff"/>
+  <rect x="424" y="494" width="352" height="34" rx="18" fill="#3d3a8c"/>
+  <rect x="424" y="510" width="352" height="18" fill="#3d3a8c"/>
+  <text x="444" y="517" class="who">🤖 GitHub Copilot</text>
+  <text x="444" y="557" class="whop">화면과 코드를 만들고</text>
+  <text x="444" y="580" class="whop">명령 실행·점검을 대신해요</text>
+
+  <rect x="788" y="494" width="352" height="110" rx="18" fill="#fff"/>
+  <rect x="788" y="494" width="352" height="34" rx="18" fill="#d9693a"/>
+  <rect x="788" y="510" width="352" height="18" fill="#d9693a"/>
+  <text x="808" y="517" class="who">🛠️ IT팀·강사</text>
+  <text x="808" y="557" class="whop">인증·DB·검색 서비스와</text>
+  <text x="808" y="580" class="whop">Azure·배포 설정을 준비해요</text>
+</svg>
