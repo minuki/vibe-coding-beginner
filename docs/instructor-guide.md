@@ -145,12 +145,11 @@ PR은 `CI` 워크플로에서 개발·배포 Compose 설정, JavaScript 문법, 
 
 배포 워크플로는 OIDC로 Azure에 로그인하고 웹앱·인증·API·Knowledge·DB 이미지를 ACR에 빌드한 뒤 기존 ACA Environment에 앱을 생성/업데이트합니다. 리소스가 자동으로 모두 준비된 상태는 아닙니다.
 
-1. 교육용 Resource Group, Azure Container Registry(ACR), ACA Environment를 준비합니다.
-2. GitHub Actions OIDC용 Entra 애플리케이션/서비스 주체를 만들고 GitHub Environment `workshop-demo`를 대상으로 federated credential을 설정합니다. subject는 `repo:OWNER/REPOSITORY:environment:workshop-demo`입니다.
-3. 배포 주체에 교육용 Resource Group의 `Contributor`를 부여하고 ACR 빌드 작업에 필요한 권한을 확인합니다. ACR 권한 모드와 조직 정책에 따라 필요한 권한이 달라질 수 있습니다. 이미지 push 권한만으로 ACR Tasks 실행까지 보장되지는 않으므로 `az acr build`를 사전 검증하세요.
-4. ACA가 이미지를 pull할 User Assigned Managed Identity를 준비하고, ACR 권한 모드에 맞는 이미지 pull 권한을 부여합니다.
-5. GitHub 저장소에서 `workshop-demo` Environment를 만들고 deployment branches를 main으로 제한합니다. 필요하면 별도 배포 승인자를 지정합니다.
-6. 아래 Actions 변수를 등록하고 데모 배포를 시험합니다. 리소스 이름은 참가자별로 구분합니다.
+1. 승인된 계획에 따라 `infra/aca/foundation.bicep`으로 전용 Resource Group, ACR Basic, Log Analytics workspace, ACA Environment, 이미지 pull용 User Assigned Managed Identity와 ACR `AcrPull` 할당을 준비합니다. `nameSuffix`에는 소문자 영문자·숫자만 사용하고 참가자/배포마다 다른 값을 지정합니다. Bicep `what-if` 검증과 정책 확인을 통과하기 전에는 리소스를 만들지 않습니다.
+2. GitHub Actions OIDC용 Entra 애플리케이션/서비스 주체를 만들고 GitHub Environment `workshop-demo`를 대상으로 federated credential을 설정합니다. subject는 `repo:OWNER/REPOSITORY:environment:workshop-demo`입니다. 이 저장소의 subject는 `repo:minuki/vibe-coding-beginner:environment:workshop-demo`입니다.
+3. 서비스 주체의 object ID를 입력해 `infra/aca/github-actions-rbac.bicep`을 배포하면 해당 전용 Resource Group에 `Contributor`, 해당 ACR에 `AcrPush`를 부여합니다. `Contributor`는 기존 workflow의 ARM 배포 및 ACR Tasks 제어 작업에 필요하고, `AcrPush`는 이미지 push 권한입니다. 역할 할당을 배포하는 사용자에게는 대상 범위의 `roleAssignments/write` 권한이 필요합니다. 권한 모드나 정책이 다르면 조직 Azure 관리자와 사전 확인합니다.
+4. GitHub 저장소에서 `workshop-demo` Environment의 deployment branches를 `main`으로 제한하고, 필요하면 별도 배포 승인자를 지정합니다. 이 저장소에는 Environment가 준비되어 있지만, 템플릿 복제본에는 Environment와 설정이 자동 복사되지 않습니다.
+5. 아래 Actions 변수와 비밀을 등록한 뒤 `Deploy demo to ACA` workflow를 실행합니다. 리소스 이름은 참가자별로 구분하고, 실제 배포 전까지 workflow를 수동 실행하거나 `main`에 병합하지 않습니다.
 
 Repository **Settings → Secrets and variables → Actions**:
 
@@ -166,7 +165,9 @@ Repository **Settings → Secrets and variables → Actions**:
 | `ACA_PULL_IDENTITY_ID` | Variable | 이미지 pull용 Identity 전체 리소스 ID |
 | `DEMO_DB_PASSWORD` | Secret | 강한 임의의 데모 DB 비밀번호 |
 
-비밀값을 Copilot 채팅에 전달하거나 파일에 커밋하지 말고 GitHub의 Secret 입력 화면에서 직접 등록합니다. 복제한 저장소마다 OIDC subject와 권한 설정을 확인하세요.
+`foundation.bicep`의 출력값은 `AZURE_RESOURCE_GROUP`, `ACR_NAME`, `ACA_ENVIRONMENT_ID`, `ACA_PULL_IDENTITY_ID`에 사용합니다. `AZURE_CLIENT_ID`는 Entra 애플리케이션의 client ID이며, RBAC 템플릿에는 그 애플리케이션의 service principal object ID를 전달합니다. `ACA_NAME`은 Container App 이름으로 저장소별 고유한 값을 사용합니다.
+
+비밀값을 Copilot 채팅에 전달하거나 파일에 커밋하지 말고 GitHub Environment의 Secret 입력 화면에서 직접 등록합니다. 복제한 저장소마다 OIDC subject와 권한 설정을 확인하세요. 준비 Bicep은 리소스 생성만 정의하며, 실제 생성과 앱 배포는 승인된 계획의 검증을 마친 뒤 별도로 진행합니다.
 
 배포 결과는 Actions의 `Deploy demo to ACA` 실행 내 `Show deployed portal URL` 단계에서 확인합니다. URL 출력은 실제 기능 검증을 대신하지 않으므로 배포 후 로그인·신청 흐름을 확인합니다.
 
